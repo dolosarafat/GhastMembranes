@@ -1,0 +1,5 @@
+name: GhastMembranes
+main: com.abdullaharafat.ghastmembranes.GhastMembranePlugin
+description: Adds Phantom Membranes to Ghast Drops/Loot table
+version: ${project.version}
+api-version: 1.19

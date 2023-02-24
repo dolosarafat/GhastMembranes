@@ -1,0 +1,60 @@
+package com.abdullaharafat.ghastmembranes;
+
+// Import Bukkit API classes
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.Ghast;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDeathEvent;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.java.JavaPlugin;
+
+//Import the random library because Java cant understand how to make a random value
+import java.util.Random;
+
+// Define your plugin class
+public class GhastMembranePlugin extends JavaPlugin implements Listener {
+
+    // Enable your plugin
+    @Override
+    public void onEnable() {
+        // Register your event listener
+        Bukkit.getPluginManager().registerEvents(this, this);
+        getLogger().info("GhastMembranes Version 1.0.2");
+    }
+
+    // Handle entity death event
+    @EventHandler
+    public void onEntityDeath(EntityDeathEvent event) {
+        // Check if the entity is a ghast
+        if (event.getEntityType() == EntityType.GHAST) {
+            // Get the ghast entity
+            Ghast ghast = (Ghast) event.getEntity();
+            // Create a new item stack of phantom membrane with a random amount between 1 and 5
+            ItemStack membrane = new ItemStack(Material.PHANTOM_MEMBRANE, (int) (Math.random() * 5 + 1));
+            // Set the display name of the item stack to "-Ghast Membrane-"
+            membrane.getItemMeta().setDisplayName("§b-Ghast Membrane-");
+            // Create a temporary inventory with one slot
+            Inventory tempInv = Bukkit.createInventory(null, 9);
+            // Fill the inventory with items based on the ghast's loot table
+            ghast.getLootTable().fillInventory(tempInv, new Random(), null);
+            // Add the item stack to the inventory
+            tempInv.addItem(membrane);
+            // Clear the ghast's drops list
+            event.getDrops().clear();
+            // Add all the items from the inventory to the ghast's drops list
+            for (ItemStack item : tempInv.getContents()) {
+                event.getDrops().add(item);
+            }
+        }
+    }
+
+    @Override
+    public void onDisable() {
+        getLogger().info("Disabling GhastMembranes");
+    }
+
+}
